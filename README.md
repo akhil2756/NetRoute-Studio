@@ -1,32 +1,40 @@
-# React + TypeScript + Vite
+# 🌐 NetRoute Studio — Internet Routing Simulator
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+An interactive web-based simulator for visualizing network topologies, routing algorithms, and packet forwarding.
 
-Currently, two official plugins are available:
+### ✨ Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+* Interactive network topology editor
+* Dijkstra shortest-path routing
+* Simplified distance-vector routing
+* Routing tables and packet simulation
+* Network failure and rerouting simulation
+* Network analytics and topology save/load
 
-## React Compiler
+### 🛠️ Tech Stack
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+React · TypeScript · Vite · React Flow · Tailwind CSS · Vitest
 
-## Expanding the Oxlint configuration
+### 🚀 Getting Started
 
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
-
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+```bash
+git clone https://github.com/YOUR-USERNAME/NetRoute-Studio.git
+cd NetRoute-Studio
+npm install
+npm run dev
 ```
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+Open the local URL displayed in your terminal.
+
+### 🧪 Testing
+
+```bash
+npm test
+npm run build
+```
+
+### 🎓 Purpose
+
+A college Computer Networks project demonstrating routing algorithms, packet forwarding, and network failure handling.
+
+**Note:** This is an educational simulation. It does not send real Internet packets or configure physical network hardware.
