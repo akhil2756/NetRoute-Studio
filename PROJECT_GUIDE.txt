@@ -1,0 +1,152 @@
+================================================================================
+                    NETROUTE STUDIO — PROJECT GUIDE
+              Internet Routing Simulator (Computer Networks)
+================================================================================
+
+1. PROJECT OVERVIEW
+--------------------------------------------------------------------------------
+NetRoute Studio is an interactive, browser-based Internet routing simulator
+designed for Computer Networks education and demonstrations. It visualizes how
+packets navigate network topologies and how routing algorithms dynamically adapt
+to network failures.
+
+Key Capabilities:
+* Dark-themed responsive dashboard with full topology management.
+* Interactive canvas for PCs, Routers, Switches, and Servers.
+* Dijkstra's Shortest Path First (SPF) algorithm.
+* Simplified Distance-Vector routing algorithm with routing tables.
+* Dynamic packet simulation with step-by-step visible traversal.
+* Real-time link and node failure injection with automated rerouting.
+* Comprehensive analytics (delivery rate, latency, hop count, event log).
+* Topology persistence via browser localStorage and JSON import/export.
+
+
+2. TECH STACK & ARCHITECTURE
+--------------------------------------------------------------------------------
+* Framework: React 19 + TypeScript (strict mode)
+* Build Tool: Vite 8 + @tailwindcss/vite 4
+* Graph Canvas: @xyflow/react (React Flow v12)
+* Icons: lucide-react
+* Charts: recharts
+* Testing: Vitest + jsdom
+
+Project Directory Structure:
+c:\NetRoute-Studio
+├── index.html
+├── package.json
+├── PROJECT_GUIDE.txt               <-- This reference document
+├── src/
+│   ├── main.tsx                    <-- React entry point
+│   ├── App.tsx                     <-- Dashboard layout & routing views
+│   ├── index.css                   <-- Global Tailwind v4 styles
+│   ├── algorithms/
+│   │   ├── dijkstra.ts             <-- Dijkstra SPF shortest-path algorithm
+│   │   └── distanceVector.ts       <-- Bellman-Ford distance-vector routing
+│   ├── components/
+│   │   ├── NetworkCanvas.tsx       <-- Interactive network topology canvas
+│   │   ├── Toolbar.tsx             <-- Device palette, presets, clear
+│   │   ├── SimulationPanel.tsx     <-- Algorithm selector, run/pause/reset
+│   │   ├── DeviceInspector.tsx     <-- Node/link property editor
+│   │   ├── RoutingTableView.tsx    <-- Distance-vector & Dijkstra tables
+│   │   ├── AnalyticsView.tsx       <-- Performance charts and event logs
+│   │   ├── SavedTopologiesView.tsx <-- Local storage & JSON import/export
+│   │   ├── Sidebar.tsx             <-- Navigation icon bar
+│   │   └── HelpView.tsx            <-- Built-in user documentation
+│   ├── data/
+│   │   └── examples.ts             <-- Pre-built templates (Reroute, Ring, Star)
+│   ├── nodes/
+│   │   └── DeviceNode.tsx          <-- Custom styled canvas node
+│   ├── store/
+│   │   └── AppContext.tsx          <-- Global state management & actions
+│   ├── types/
+│   │   └── network.ts              <-- Core TypeScript interfaces & types
+│   └── utils/
+│       ├── analytics.ts            <-- Metric calculations & bottleneck logic
+│       ├── graph.ts                <-- Adjacency mapping & topology validation
+│       ├── persistence.ts          <-- LocalStorage & JSON validation
+│       └── simulation.ts           <-- Route calculation & packet events
+└── tests/
+    ├── dijkstra.test.ts            <-- 8 unit tests for Dijkstra
+    ├── distanceVector.test.ts      <-- 7 unit tests for Distance Vector
+    └── utils.test.ts               <-- 18 unit tests for graph/analytics/import
+
+
+3. DEVELOPMENT & TEST COMMANDS
+--------------------------------------------------------------------------------
+All commands run from the project root (c:\NetRoute-Studio):
+
+* Run local development server:
+    npm run dev
+    Accessible at: http://localhost:5173/
+
+* Run automated test suite:
+    npm run test
+    Executes all 33 Vitest tests (100% passing).
+
+* Run linter:
+    npm run lint
+    Executes oxlint static analysis.
+
+* Build production bundle:
+    npm run build
+    Compiles TypeScript (`tsc -b`) and produces minified bundle in `dist/`.
+
+
+4. STEP-BY-STEP DEMO WALKTHROUGH
+--------------------------------------------------------------------------------
+To demonstrate NetRoute Studio to evaluators or instructors:
+
+Demo 1: Baseline Shortest Path Simulation
+1. Launch NetRoute Studio at http://localhost:5173/.
+2. Notice the "Simple Rerouting Demo" topology is preloaded by default with
+   PC1 as Source (green tag) and Server1 as Destination (amber tag).
+3. Confirm algorithm is set to "Dijkstra's SPF" in the bottom simulation panel.
+4. Click "Run".
+5. Watch the glowing cyan packet move: PC1 -> R1 -> R2 -> Server1.
+6. The HUD banner at the top shows:
+   "Dijkstra: PC1 -> R1 -> R2 -> Server1 | Cost: 4 | Hops: 3 | Hop 3/3".
+7. Analytics at the bottom update: Packets Sent: 1, Delivered: 1, Rate: 100%.
+
+Demo 2: Link Failure & Automatic Rerouting
+1. Click on the link between R1 and R2.
+2. In the right-hand Inspector, click "Enabled" to toggle it to "Disabled"
+   (or click "Disable" in the top toolbar).
+3. The R1 <-> R2 link turns into a dashed red line with cost 2.
+4. Click "Run" in the bottom simulation panel.
+5. Notice the new route automatically selected: PC1 -> R1 -> R3 -> R2 -> Server1.
+6. The packet navigates through R3 to bypass the broken link! Total cost: 8.
+7. Click the "Analytics" tab on the left sidebar to see the logged event:
+   "Route found: PC1 -> R1 -> R3 -> R2 -> Server1 | Cost: 8 | Hops: 4".
+
+Demo 3: Distance-Vector Routing Tables
+1. Click the "Routing" tab on the left sidebar (table icon).
+2. Examine the Distance-Vector routing tables computed for each router (R1, R2, R3).
+3. Each table displays: Destination, Next Hop, Metric, and Status (active).
+4. Notice how next hops reflect the active topology configuration.
+
+Demo 4: Topology Management & JSON Import/Export
+1. Click the "Saved" tab on the left sidebar (folder icon).
+2. Click "Save Current" to store your current topology in browser localStorage.
+3. Click "Export JSON" to download the network configuration as a `.json` file.
+4. Switch presets by clicking "Load" next to "Ring Network" or "Star Topology".
+5. Click "Import JSON" and select any exported topology to restore it.
+
+
+5. ALGORITHM DETAILS
+--------------------------------------------------------------------------------
+* Dijkstra's SPF:
+  - Uses min-priority traversal over an adjacency list.
+  - Link weights (cost >= 1) define the metric.
+  - Disabled links (`enabled === false`) and offline devices (`status === 'offline'`)
+    are strictly excluded from the graph.
+  - Guaranteed to find the minimal-cost path or return `reachable: false`.
+
+* Distance Vector:
+  - Bellman-Ford iterative relaxation mimicking RIP principles.
+  - Routers maintain vectors of (destination -> { nextHop, cost }).
+  - Exchanging distance vectors iteratively until convergence.
+  - Metric cap: cost >= 16 represents infinity (unreachable destination).
+
+================================================================================
+                         End of NetRoute Studio Guide
+================================================================================
